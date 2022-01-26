@@ -26,7 +26,6 @@ def model_predictions(data):
     
     pred = trained_model.predict(df)
     
-    print(pred)
     return pred
 
 ##################Function to get summary statistics
@@ -43,8 +42,7 @@ def dataframe_summary():
         sd = df[col].std()
         
         summary_stats[col] = [mean, median, sd]
-   
-    print(summary_stats)
+    
     return summary_stats
 
 def missing_data():
@@ -77,8 +75,8 @@ def execution_time():
 ##################Function to check dependencies
 def outdated_packages_list():
     #get a list of 
-    outdated = subprocess.check_output(['python', '-m', 'pip', 'list', '--outdated'])
-    print(outdated)
+    outdated = subprocess.run(['python', '-m', 'pip', 'list', '--outdated']).stdout
+    return outdated
 
 
 if __name__ == '__main__':
