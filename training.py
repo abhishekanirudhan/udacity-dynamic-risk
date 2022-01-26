@@ -14,7 +14,6 @@ with open('config.json','r') as f:
 
 dataset_csv_path = os.path.join(config['output_folder_path']) 
 model_path = os.path.join(config['output_model_path'])
-print(model_path)
 
 
 #################Function for training the model

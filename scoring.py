@@ -21,11 +21,6 @@ output_model_path = os.path.join(config['output_model_path'])
 
 #################Function for model scoring
 def score_model():
-    """
-    Function accepts a trained model, loads test data, and calculates 
-    an F1 score for the model relative to the test data.
-    It then writes the result to the latestscore.txt file
-    """
     
     # Load in test data
     testdata = pd.read_csv(os.path.join(os.getcwd(), test_data_path, 'testdata.csv'))

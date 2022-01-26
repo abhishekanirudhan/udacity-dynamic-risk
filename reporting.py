@@ -25,12 +25,17 @@ def score_model():
     filename = 'testdata.csv'
     filepath = os.path.join(test_data_path, filename)
     
-    pred = diagnostics.model_predictions(filename)
-    
     df = pd.read_csv(filepath)
+    
+    X_df = df.loc[:, ['lastmonth_activity', 'lastyear_activity', 'number_of_employees']].values.reshape(-1, 3)
+    
+    pred = diagnostics.model_predictions(X_df)
     y_test = df['exited'].values.reshape(-1, 1)
+    
     cm = confusion_matrix(y_test, pred)
     disp = ConfusionMatrixDisplay(confusion_matrix = cm)
+    
+    disp.plot()
     plt.savefig(os.path.join(output_model_path, 'confusionmatrix.png'))
 
 

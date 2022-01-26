@@ -12,19 +12,17 @@ with open('config.json','r') as f:
     config = json.load(f) 
 
 prod_deployment_path = os.path.join(config['prod_deployment_path']) 
-test_data_path = os.path.join(config['test_data_path']) 
+test_data_path = os.path.join(config['test_data_path'])
+output_folder_path = os.path.join(config['output_folder_path'])
 
 ##################Function to get model predictions
-def model_predictions(data):
+def model_predictions(X_df):
     #read the deployed model and a test dataset, calculate predictions
     file = open(os.path.join(os.getcwd(), prod_deployment_path, 'trainedmodel.pkl'), 'rb')
     trained_model = pickle.load(file)
     file.close()
     
-    df = pd.read_csv(os.path.join(os.getcwd(), test_data_path, data))
-    df = df.loc[:, ['lastmonth_activity', 'lastyear_activity', 'number_of_employees']].values.reshape(-1, 3)
-    
-    pred = trained_model.predict(df)
+    pred = trained_model.predict(X_df)
     
     return pred
 
@@ -51,9 +49,6 @@ def missing_data():
     missing_list = list(df.isna().sum())
     missing_pct = [missing_list[i]/len(df.index) for i in range(len(missing_list))]
     
-    print(missing_list)
-    print(missing_pct)
-    
     return missing_pct
 
 ##################Function to get timings
@@ -69,7 +64,6 @@ def execution_time():
 
     time_list = [ingest_time, train_time]
     
-    print(time_list)
     return time_list
 
 ##################Function to check dependencies
