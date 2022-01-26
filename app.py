@@ -2,12 +2,11 @@ from flask import Flask, session, jsonify, request
 import pandas as pd
 import numpy as np
 import pickle
-import create_prediction_model
-import diagnosis 
-import predict_exited_from_saved_model
 import json
 import os
+import subprocess
 
+import diagnostics
 
 
 ######################Set up variables for use in our script
@@ -26,25 +25,39 @@ prediction_model = None
 @app.route("/prediction", methods=['POST','OPTIONS'])
 def predict():        
     #call the prediction function you created in Step 3
-    return #add return value for prediction outputs
+    #filepath = request.get_json()[]
+    pass #add return value for prediction outputs
 
 #######################Scoring Endpoint
 @app.route("/scoring", methods=['GET','OPTIONS'])
-def stats():        
+def scores():        
     #check the score of the deployed model
-    return #add return value (a single F1 score number)
+    scores = subprocess.run(['python', 'scoring.py'], capture_output = True).stdout
+    return scores
 
 #######################Summary Statistics Endpoint
 @app.route("/summarystats", methods=['GET','OPTIONS'])
 def stats():        
     #check means, medians, and modes for each column
-    return #return a list of all calculated summary statistics
+    #return a list of all calculated summary statistics
+    summary = diagnostics.dataframe_summary()
+    
+    return jsonify(summary)
 
 #######################Diagnostics Endpoint
 @app.route("/diagnostics", methods=['GET','OPTIONS'])
-def stats():        
+def diagnose():        
     #check timing and percent NA values
-    return #add return value for all diagnostics
+    #add return value for all diagnostics
+    missing = diagnostics.missing_data()
+    time = diagnostics.execution_time()
+    outdated = diagnostics.outdated_packages_list()
+    
+    output = {'missing data pct': missing,
+             'execution time': time,
+             'outdated packages': outdated}
+    
+    return jsonify(output)
 
 if __name__ == "__main__":    
-    app.run(host='0.0.0.0', port=8000, debug=True, threaded=True)
+    app.run(host='127.0.0.1', port=8000, debug=True, threaded=True)
