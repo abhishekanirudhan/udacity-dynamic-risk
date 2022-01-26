@@ -12,7 +12,7 @@ with open('config.json','r') as f:
     config = json.load(f) 
 
 prod_deployment_path = os.path.join(config['prod_deployment_path']) 
-output_folder_path = os.path.join(config['output_folder_path']) 
+test_data_path = os.path.join(config['test_data_path']) 
 
 ##################Function to get model predictions
 def model_predictions(data):
@@ -21,7 +21,7 @@ def model_predictions(data):
     trained_model = pickle.load(file)
     file.close()
     
-    df = pd.read_csv(os.path.join(os.getcwd(), output_folder_path, data))
+    df = pd.read_csv(os.path.join(os.getcwd(), test_data_path, data))
     df = df.loc[:, ['lastmonth_activity', 'lastyear_activity', 'number_of_employees']].values.reshape(-1, 3)
     
     pred = trained_model.predict(df)
@@ -80,7 +80,7 @@ def outdated_packages_list():
 
 
 if __name__ == '__main__':
-    model_predictions('finaldata.csv')
+    model_predictions('testdata.csv')
     dataframe_summary()
     execution_time()
     outdated_packages_list()
